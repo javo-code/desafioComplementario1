@@ -51,6 +51,6 @@ export const remove = async (id) => {
     if (!prodDel) return false;
     else return prodDel;
   } catch (error) {
-    console.log(error);
+    console.log(error); 
   }
 };

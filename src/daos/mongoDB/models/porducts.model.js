@@ -3,7 +3,7 @@ import { Schema, model } from "mongoose";
 export const productCollection = "product";
 
 export const productSchema = new Schema({
-    status: { type: Boolean, required: true },
+
     title: { type: String, required: true },
     description: { type: String, required: true },
     code: { type: String, required: true },

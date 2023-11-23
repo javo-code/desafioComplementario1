@@ -41,20 +41,18 @@ export default class ProductDaoFS {
     }
   }
 
-  async create(prod) {
+  async create(obj) {
     try {
       const product = {
         id: (await this.#getMaxId()) + 1,
-        status: true,
-        ...prod
+        ...obj,
       };
-      const products = await this.getAll();
-      products.push(product);
-      await fs.promises.writeFile(this.path, JSON.stringify(products));
+      const productsFile = await this.getAll();
+      productsFile.push(product);
+      await fs.promises.writeFile(this.path, JSON.stringify(productsFile));
       return product;
     } catch (error) {
       console.log(error);
-      throw error;
     }
   }
 
@@ -79,6 +77,7 @@ export default class ProductDaoFS {
       if (productsFile.length > 0) {
         const newArray = productsFile.filter((prod) => prod.id !== Number(id));
         await fs.promises.writeFile(this.path, JSON.stringify(newArray));
+        return true;
       } else {
         throw new Error(`Product id: ${id} not found`);
       }
