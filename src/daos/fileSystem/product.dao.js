@@ -1,30 +1,45 @@
 import fs from "fs";
 
 export default class ProductDaoFS {
+
   constructor(path) {
     this.path = path;
   }
-
-  async #getMaxId() {
-    let maxId = 0;
-    const products = await this.getAll();
-    products.map((prod) => {
-      if (prod.id > maxId) maxId = prod.id;
-    });
-    return maxId;
-  }
-
   async getAll() {
     try {
       if (fs.existsSync(this.path)) {
-        const products = await fs.promises.readFile(this.path, "utf-8");
-        const productsJSON = JSON.parse(products);
-        return productsJSON;
+        const productsJSON = await fs.promises.readFile(this.path, "utf-8");
+        return JSON.parse(productsJSON);
       } else {
         return [];
       }
     } catch (error) {
       console.log(error);
+    }
+  }
+  async #getMaxId() {
+    let maxId = 0;
+    const products = await this.getAll();
+    products.map((product) => {
+      if (product.id > maxId) maxId = product.id;
+    });
+    return maxId;
+  }
+
+  async create(prod) {
+    try {
+      const product = {
+        id: (await this.#getMaxId()) + 1,
+        status: true,
+        ...prod
+      };
+      const products = await this.getAll();
+      products.push(product);
+      await fs.promises.writeFile(this.path, JSON.stringify(products));
+      return product;
+    } catch (error) {
+      console.log(error);
+      throw error;
     }
   }
 
@@ -41,31 +56,29 @@ export default class ProductDaoFS {
     }
   }
 
-  async create(obj) {
+  async update(obj, id) {
     try {
-      const product = {
-        id: (await this.#getMaxId()) + 1,
-        ...obj,
-      };
-      const productsFile = await this.getAll();
-      productsFile.push(product);
-      await fs.promises.writeFile(this.path, JSON.stringify(productsFile));
-      return product;
+      const products = await this.getAll();
+      const productIndex = products.findIndex(prod => prod.id === id);
+      if (productIndex === -1) return false;
+      else {
+        products[productIndex] = { ...products[productIndex], ...obj, id };
+
+        await fs.promises.writeFile(this.path, JSON.stringify(products));
+        return products[productIndex];
+      }
     } catch (error) {
       console.log(error);
+      throw error;
     }
   }
 
-  async update(obj, id) {
+  async delete(idProduct) {
     try {
-      const productsFile = await this.getAll();
-      const index = productsFile.findIndex((prod) => prod.id === Number(id));
-      if (index === -1) {
-        throw new Error(`Id ${id} not found`);
-      } else {
-        productsFile[index] = { ...obj, id };
-      }
-      await fs.promises.writeFile(this.path, JSON.stringify(productsFile));
+      const products = await this.getAll();
+      if (products.length < 0) return false;
+      const updatedArray = products.filter((product) => product.id !== idProduct);
+      await fs.promises.writeFile(this.path, JSON.stringify(updatedArray));
     } catch (error) {
       console.log(error);
     }
@@ -77,7 +90,7 @@ export default class ProductDaoFS {
       if (productsFile.length > 0) {
         const newArray = productsFile.filter((prod) => prod.id !== Number(id));
         await fs.promises.writeFile(this.path, JSON.stringify(newArray));
-        return true;
+        return true
       } else {
         throw new Error(`Product id: ${id} not found`);
       }
@@ -86,3 +99,7 @@ export default class ProductDaoFS {
     }
   }
 }
+
+const productDaoFS = new ProductDaoFS("./data/products.json")
+
+export { ProductDaoFS }
