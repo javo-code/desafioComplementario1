@@ -2,7 +2,7 @@ import { Router } from "express";
 const router = Router();
 
 import { productValidator } from "../middleware/productValidator.js";
-import { productManager } from "../managers/products.manager.js";
+import { productManager } from "../daos/managers/products.dao.js";
 
 
 //MOSTRAR TODOS LOS PRODUCTOS

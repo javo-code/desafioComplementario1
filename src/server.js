@@ -6,7 +6,7 @@ import cartRouter from "./routes/cart.router.js";
 import viewRouter from './routes/views.router.js';
 import { Server } from "socket.io";
 import fs from 'fs';
-import { productManager } from './managers/products.manager.js';
+import { productManager } from './daos/managers/products.dao.js';
 
 import "./daos/mongoDB/connection.js";
 import { errorHandler } from "./middleware/errorHandler.js";

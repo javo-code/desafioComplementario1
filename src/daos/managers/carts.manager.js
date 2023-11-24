@@ -1,5 +1,5 @@
-/* import fs from "fs";
-import { productManager } from "../managers/products.manager.js";
+import fs from "fs";
+import { productManager } from "../managers/products.dao.js";
 
 class CartManager {
     constructor(path) {
@@ -122,4 +122,4 @@ return currentCart;
 
 const cartManager = new CartManager("./carts.json");
 
-export { cartManager } */
+export { cartManager }
