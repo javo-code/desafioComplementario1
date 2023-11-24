@@ -1,7 +1,6 @@
 import fs from "fs";
 
-export default class ProductDaoFS {
-
+class ProductsDaoFS {
   constructor(path) {
     this.path = path;
   }
@@ -26,6 +25,7 @@ export default class ProductDaoFS {
     return maxId;
   }
 
+  //CREAR PRODUCTO.
   async create(prod) {
     try {
       const product = {
@@ -43,14 +43,12 @@ export default class ProductDaoFS {
     }
   }
 
-  async getById(id) {
+  async getById(idProduct) {
     try {
       const products = await this.getAll();
-      const product = products.find((prod) => prod.id === Number(id));
-      if (product) {
-        return product;
-      }
-      return false;
+      const productById = products.find((product) => product.id === idProduct);
+      if (!productById) return false;
+      return productById;
     } catch (error) {
       console.log(error);
     }
@@ -84,22 +82,17 @@ export default class ProductDaoFS {
     }
   }
 
-  async delete(id) {
+  async getByLimit(limit) {
     try {
-      const productsFile = await this.getAll();
-      if (productsFile.length > 0) {
-        const newArray = productsFile.filter((prod) => prod.id !== Number(id));
-        await fs.promises.writeFile(this.path, JSON.stringify(newArray));
-        return true
-      } else {
-        throw new Error(`Product id: ${id} not found`);
-      }
+      const products = await this.getAll();
+      if (!limit || limit >= products.length) return products;
+      else return products.slice(0, limit);
     } catch (error) {
       console.log(error);
     }
   }
 }
 
-const productDaoFS = new ProductDaoFS("./data/products.json")
+const productsDaoFS = new ProductsDaoFS("./data/producst.json");
 
-export { ProductDaoFS }
+export { productsDaoFS }

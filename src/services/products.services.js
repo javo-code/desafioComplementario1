@@ -1,11 +1,11 @@
-/* import ProductDaoMongoDB from "../daos/mongodb/product.dao.js";
-const prodDao = new ProductDaoMongoDB(); */
+import ProductDaoMongoDB from "../daos/mongoDB/products.dao.js";
+const prodDao = new ProductDaoMongoDB();
 
-import ProductDaoFS from "../daos/filesystem/product.dao.js";
-import { __dirname } from "../utils.js";
-const prodDao = new ProductDaoFS(
-  __dirname + "/daos/filesystem/data/products.json"
-);
+// import ProductDaoFS from "../daos/filesystem/product.dao.js";
+// import { __dirname } from "../utils.js";
+// const prodDao = new ProductDaoFS(
+//   __dirname + "/daos/filesystem/data/products.json"
+// );
 
 export const getAll = async () => {
   try {
@@ -18,7 +18,7 @@ export const getAll = async () => {
 export const getById = async (id) => {
   try {
     const prod = await prodDao.getById(id);
-    if (!prod) return false;
+    if (!prod) return false; //el controller recibe esta respuesta
     else return prod;
   } catch (error) {
     console.log(error);
@@ -51,6 +51,6 @@ export const remove = async (id) => {
     if (!prodDel) return false;
     else return prodDel;
   } catch (error) {
-    console.log(error); 
+    console.log(error);
   }
 };

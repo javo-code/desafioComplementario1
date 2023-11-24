@@ -2,11 +2,14 @@ import express from "express";
 import handlebars from "express-handlebars";
 import { __dirname } from "./utils.js";
 import productRouter from "./routes/product.router.js";
-/* import cartRouter from "./routes/cart.router.js"; */
+import cartRouter from "./routes/cart.router.js";
 import viewRouter from './routes/views.router.js';
 import { Server } from "socket.io";
 import fs from 'fs';
-import { productManager } from './managers/products.manager.js'; // Agregar esta línea
+import { productManager } from './managers/products.manager.js';
+
+import "./daos/mongoDB/connection.js";
+import { errorHandler } from "./middleware/errorHandler.js";
 
 const app = express();
 app.use(express.json());
@@ -14,7 +17,9 @@ app.use(express.static(__dirname + "/public"));
 
 app.use('/', viewRouter);
 app.use('/api/products', productRouter);
-/* app.use('/api/carts', cartRouter); */
+app.use('/api/carts', cartRouter);
+
+app.use(errorHandler);
 
 app.engine("handlebars", handlebars.engine());
 app.set("view engine", "handlebars");
