@@ -1,15 +1,20 @@
+/*
+import { model } from 'mongoose';
+import { ProductModel  } from './models/products.model';
+*/
+
 import fs from 'fs';
 
-export default class ProductDaoFS {
+export default class ProductDaoMongoDB {
     constructor(path) {
         this.path = path;
 }
 
-    async #getMaxId() {
-        let maxId = 0;
-        const products = await this.getAll();
-        products.map((prod) => {
-            if (prod.id > maxId) maxId = prod.id;
+async #getMaxId() {
+    let maxId = 0;
+    const products = await this.getAll();
+    products.map((prod) => {
+        if (prod.id > maxId) maxId = prod.id;
         });
         return maxId;
     }
@@ -27,20 +32,8 @@ export default class ProductDaoFS {
             console.log("error del get all en products dao mongo")
         }
     }
-
-    async getById(id) {
-        try {
-            const products = await this.getAll();
-            const product = products.find((prod) => prod.id === id);
-            if (product) {
-                return product;
-            }
-            return true;
-        } catch (error) {
-            console.log("error del get by id de mongo");
-        }
-    }
-
+    
+    //CREAR PRODUCTO.
     async create(obj) {
         try {
             const product = {
@@ -53,6 +46,19 @@ export default class ProductDaoFS {
             return product
         } catch (error) {
             console.log("error del create de mongo");
+        }
+    }
+    
+    async getById(id) {
+        try {
+            const products = await this.getAll();
+            const product = products.find((prod) => prod.id === id);
+            if (product) {
+                return product;
+            }
+            return true;
+        } catch (error) {
+            console.log("error del get by id de mongo");
         }
     }
 

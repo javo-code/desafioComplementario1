@@ -1,98 +1,22 @@
 import { Router } from "express";
-const router = Router();
+import * as controller from "../controllers/products.controller.js"
 
 import { productValidator } from "../middleware/productValidator.js";
-import { productDaoFS } from "../daos/fileSystem/products.dao.js";
 
-
+const router = Router();
 //MOSTRAR TODOS LOS PRODUCTOS
-router.get("/", async (req, res) => {
-    try {
-        const { limit } = req.query;
-        const products = await productDaoFS.getProducts();
-        if (!limit) {
-            res.status(200).json(products);
-        } else {
-            const productsByLimit = await productDaoFS.getProductByLimit(limit);
-            res.status(200).json(productsByLimit);
-        }
-    } catch (error) {
-        res.status(404).json({ message: "The product does not exist..." });
-    }
-});
+router.get("/", controller.getAll);
 
 //CREAR PRODUCTO.
-router.post("/", productValidator, async (req, res) => {
-  try {
-    const { code } = req.body;
-    const products = await productDaoFS.getProducts();
-    const isCodeRepeated = products.some(
-      (existingProduct) => existingProduct.code === code
-    );
-    if (isCodeRepeated) {
-      return res.status(400).json({ message: "Product code already exists" });
-    }
-
-    // Utilizamos el nuevo método para crear el producto con ID consecutivo
-    const productCreated = await productDaoFS.createProduct(
-      req.body
-    );
-    res.status(200).json(productCreated);
-  } catch (error) {
-    res
-      .status(500)
-      .json({ error: "Internal Server Error - (CREAR PRODUCTO.)" });
-  }
-});
+router.post("/", productValidator, controller.create);
 
 //MOSTRAR PRODUCTO POR ID.
-router.get("/:pid", async (req, res) => {
-    try {
-        const { pid } = req.params;
-        const productById = await productDaoFS.getProductById(Number(pid));
-        if (!productById) {
-            res.status(404).json({ message: "The product does not exist..." });
-        } else {
-            res.status(200).json(productById);
-        }
-    } catch (error) {
-        res.status(500).json({ error: "Internal Server Error - (MOSTRAR PRODUCTO POR ID.)" });
-    }
-});
+router.get("/:pid", controller.getById);
 
 //MODIFICAR PRODUCTO.
-router.put("/:id", async (req, res) => {
-    try {
-        const product = { ...req.body };
-        const { id } = req.params;
-        const idNumber = Number(id);
-        const productOk = await productDaoFS.getProductById(idNumber);
-        if (!productOk) {
-            res.status(404).json({ message: "The product does not exist..." });
-        } else {
-            await productDaoFS.updateProduct(product, idNumber);
-            res
-                .status(200)
-                .json({ message: `Product ID: ${id} updated successfully!` });
-        }
-    } catch (error) {
-        res.status(500).json({ error: "Internal Server Error - (MODIFICAR PRODUCTO.)" });
-    }
-});
+router.put("/:id", controller.update);
 
 //ELIMINAR PRODUCTO.
-router.delete("/:pid", async (req, res) => {
-    try {
-        const { pid } = req.params;
-        const idNumber = Number(pid);
-        await productDaoFS.deleteProduct(idNumber);
-        res.json({ message: `Product ID: ${idNumber} deleted` });
-    } catch (error) {
-        res.status(500).json({ error: "Internal Server Error - (ELIMINAR PRODUCTO.)" });
-    }
-});
-
-//CREAR PRODUCTO y AGREGAR IMG.
-//seguir probando...
+router.delete("/:pid", controller.remove);
 
 export default router;

@@ -1,5 +1,5 @@
 // import { getAll, getById, create, update, remove } from "../services/product.services.js";
-import * as service from "../services/product.services.js";
+import * as service from "../services/products.services.js";
 
 export const getAll = async (req, res, next) => {
   try {

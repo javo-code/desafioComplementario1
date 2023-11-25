@@ -4,7 +4,16 @@ class ProductDaoFS {
   constructor(path) {
     this.path = path;
   }
-  async getProducts() {
+  async #getMaxId() {
+    let maxId = 0;
+    const products = await this.getProducts();
+    products.map((product) => {
+      if (product.id > maxId) maxId = product.id;
+    });
+    return maxId;
+  }
+
+  async getAll() {
     try {
       if (fs.existsSync(this.path)) {
         const productsJSON = await fs.promises.readFile(this.path, "utf-8");
@@ -16,17 +25,9 @@ class ProductDaoFS {
       console.log(error);
     }
   }
-  async #getMaxId() {
-    let maxId = 0;
-    const products = await this.getProducts();
-    products.map((product) => {
-      if (product.id > maxId) maxId = product.id;
-    });
-    return maxId;
-  }
 
   //CREAR PRODUCTO.
-  async createProduct(prod) {
+  async create(prod) {
     try {
       const product = {
         id: (await this.#getMaxId()) + 1,
@@ -43,7 +44,7 @@ class ProductDaoFS {
     }
   }
 
-  async getProductById(idProduct) {
+  async getById(idProduct) {
     try {
       const products = await this.getProducts();
       const productById = products.find((product) => product.id === idProduct);
@@ -54,7 +55,7 @@ class ProductDaoFS {
     }
   }
 
-  async updateProduct(obj, id) {
+  async update (obj, id) {
     try {
       const products = await this.getProducts();
       const productIndex = products.findIndex(prod => prod.id === id);
@@ -71,7 +72,7 @@ class ProductDaoFS {
     }
   }
 
-  async deleteProduct(idProduct) {
+  async delete(idProduct) {
     try {
       const products = await this.getProducts();
       if (products.length < 0) return false;

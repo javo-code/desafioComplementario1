@@ -14,9 +14,12 @@ const msgDaoFS = new MessagesDaoFS(__dirname+'/db/messages.json');
 import "./daos/mongoDB/connection.js";
 import { errorHandler } from "./middleware/errorHandler.js";
 
+import morgan from "morgan";
+
 const app = express();
 app.use(express.json());
 app.use(express.static(__dirname + "/public"));
+app.use(morgan('dev'));
 
 app.use('/', viewRouter);
 app.use('/api/products', productRouter);
