@@ -8,6 +8,9 @@ import { Server } from "socket.io";
 import fs from 'fs';
 import { productManager } from './daos/managers/products.dao.js';
 
+import MessagesManager from './daos/managers/chat.dao.js';
+const msgManager = new MessagesManager(__dirname+'/db/messages.json');
+
 import "./daos/mongoDB/connection.js";
 import { errorHandler } from "./middleware/errorHandler.js";
 
@@ -42,8 +45,8 @@ fs.readFile('./products.json', 'utf-8', (err, data) => {
   }
 });
 
-socketServer.on('connection', (socket) => {
-  console.log('Cliente conectado');
+socketServer.on('connection', async (socket) => {
+  console.log('🍺 Cliente conectado');
 
   // Emitir productos al cliente al conectarse
   socket.emit('arrayProducts', products);
@@ -79,4 +82,23 @@ socketServer.on('connection', (socket) => {
       console.error('Error al eliminar el producto:', error);
     }
   });
+
+      console.log('🟢 ¡New connection!', socket.id + ' 🟢');
+    socketServer.emit('messages', await msgManager.getAll());
+
+    socket.on('disconnect', ()=>console.log('🔴 ¡User disconnect!', socket.id + '🔴'));
+    socket.on('newUser', (user)=>console.log(`⏩ ${user} inició sesión`));
+
+    socket.on('chat:message', async(msg)=>{
+        await msgManager.createMsg(msg);
+        socketServer.emit('messages', await msgManager.getAll());
+    })
+
+    socket.on('newUser', (user)=>{
+        socket.broadcast.emit('newUser', user)
+    })
+
+    socket.on('chat:typing', (data)=>{
+        socket.broadcast.emit('chat:typing', data)
+    })
 });
