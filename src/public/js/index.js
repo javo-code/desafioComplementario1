@@ -81,11 +81,11 @@ let username = null;
 
 if (!username) {
   Swal.fire({
-    title: "¡Welcome to chat!",
-    text: "Isert your username",
+    title: "WELCOME !",
+    text: "Ingrese su nombre de usuario",
     input: "text",
     inputValidator: (value) => {
-      if (!value) return "¡Your username is required!";
+      if (!value) return "¡Debes poner un nombre, cara de mono!";
     },
   }).then((input) => {
     username = input.value;

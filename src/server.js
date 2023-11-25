@@ -30,7 +30,7 @@ app.set("views", __dirname + "/views");
 
 const PORT = 8080;
 const httpServer = app.listen(PORT, () => {
-  console.log(`Escuchando en el puerto: ${PORT}`);
+  console.log(`🚀 Escuchando en el puerto: ${PORT}`);
 });
 
 const socketServer = new Server(httpServer);
@@ -83,10 +83,10 @@ socketServer.on('connection', async (socket) => {
     }
   });
 
-      console.log('🟢 ¡New connection!', socket.id + ' 🟢');
+    console.log('🟢 ¡New connection!', socket.id);
     socketServer.emit('messages', await msgManager.getAll());
 
-    socket.on('disconnect', ()=>console.log('🔴 ¡User disconnect!', socket.id + '🔴'));
+    socket.on('disconnect', ()=>console.log('🔴 ¡User disconnect!', socket.id));
     socket.on('newUser', (user)=>console.log(`⏩ ${user} inició sesión`));
 
     socket.on('chat:message', async(msg)=>{
@@ -101,4 +101,4 @@ socketServer.on('connection', async (socket) => {
     socket.on('chat:typing', (data)=>{
         socket.broadcast.emit('chat:typing', data)
     })
-});
+})
