@@ -6,10 +6,10 @@ import cartRouter from "./routes/cart.router.js";
 import viewRouter from './routes/views.router.js';
 import { Server } from "socket.io";
 import fs from 'fs';
-import { productManager } from './daos/fileSystem/products.dao.js';
+import { productDaoFS } from './daos/fileSystem/products.dao.js';
 
-import MessagesManager from './daos/fileSystem/chat.dao.js';
-const msgManager = new MessagesManager(__dirname+'/db/messages.json');
+import MessagesDaoFS from './daos/fileSystem/chat.dao.js';
+const msgDaoFS = new MessagesDaoFS(__dirname+'/db/messages.json');
 
 import "./daos/mongoDB/connection.js";
 import { errorHandler } from "./middleware/errorHandler.js";
@@ -73,8 +73,8 @@ socketServer.on('connection', async (socket) => {
 
   socket.on('deleteProduct', async (productId) => {
     try {
-      await productManager.deleteProduct(parseInt(productId));
-      const updatedProducts = await productManager.getProducts();
+      await productDaoFS.deleteProduct(parseInt(productId));
+      const updatedProducts = await productDaoFS.getProducts();
 
       // Emitir los productos actualizados a todos los clientes
       socketServer.emit('arrayProducts', updatedProducts);
@@ -84,14 +84,14 @@ socketServer.on('connection', async (socket) => {
   });
 
     console.log('🟢 ¡New connection!', '✨' + socket.id + '✨');
-    socketServer.emit('messages', await msgManager.getAll());
+    socketServer.emit('messages', await msgDaoFS.getAll());
 
     socket.on('disconnect', ()=>console.log('🔴 ¡User disconnect!', socket.id));
     socket.on('newUser', (user)=>console.log(`⏩ ${user} inició sesión`));
 
     socket.on('chat:message', async(msg)=>{
-        await msgManager.createMsg(msg);
-        socketServer.emit('messages', await msgManager.getAll());
+        await msgDaoFS.createMsg(msg);
+        socketServer.emit('messages', await msgDaoFS.getAll());
     })
 
     socket.on('newUser', (user)=>{

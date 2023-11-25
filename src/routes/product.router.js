@@ -2,18 +2,18 @@ import { Router } from "express";
 const router = Router();
 
 import { productValidator } from "../middleware/productValidator.js";
-import { productManager } from "../daos/fileSystem/products.dao.js";
+import { productDaoFS } from "../daos/fileSystem/products.dao.js";
 
 
 //MOSTRAR TODOS LOS PRODUCTOS
 router.get("/", async (req, res) => {
     try {
         const { limit } = req.query;
-        const products = await productManager.getProducts();
+        const products = await productDaoFS.getProducts();
         if (!limit) {
             res.status(200).json(products);
         } else {
-            const productsByLimit = await productManager.getProductByLimit(limit);
+            const productsByLimit = await productDaoFS.getProductByLimit(limit);
             res.status(200).json(productsByLimit);
         }
     } catch (error) {
@@ -25,7 +25,7 @@ router.get("/", async (req, res) => {
 router.post("/", productValidator, async (req, res) => {
   try {
     const { code } = req.body;
-    const products = await productManager.getProducts();
+    const products = await productDaoFS.getProducts();
     const isCodeRepeated = products.some(
       (existingProduct) => existingProduct.code === code
     );
@@ -34,7 +34,7 @@ router.post("/", productValidator, async (req, res) => {
     }
 
     // Utilizamos el nuevo método para crear el producto con ID consecutivo
-    const productCreated = await productManager.createProduct(
+    const productCreated = await productDaoFS.createProduct(
       req.body
     );
     res.status(200).json(productCreated);
@@ -49,7 +49,7 @@ router.post("/", productValidator, async (req, res) => {
 router.get("/:pid", async (req, res) => {
     try {
         const { pid } = req.params;
-        const productById = await productManager.getProductById(Number(pid));
+        const productById = await productDaoFS.getProductById(Number(pid));
         if (!productById) {
             res.status(404).json({ message: "The product does not exist..." });
         } else {
@@ -66,11 +66,11 @@ router.put("/:id", async (req, res) => {
         const product = { ...req.body };
         const { id } = req.params;
         const idNumber = Number(id);
-        const productOk = await productManager.getProductById(idNumber);
+        const productOk = await productDaoFS.getProductById(idNumber);
         if (!productOk) {
             res.status(404).json({ message: "The product does not exist..." });
         } else {
-            await productManager.updateProduct(product, idNumber);
+            await productDaoFS.updateProduct(product, idNumber);
             res
                 .status(200)
                 .json({ message: `Product ID: ${id} updated successfully!` });
@@ -85,7 +85,7 @@ router.delete("/:pid", async (req, res) => {
     try {
         const { pid } = req.params;
         const idNumber = Number(pid);
-        await productManager.deleteProduct(idNumber);
+        await productDaoFS.deleteProduct(idNumber);
         res.json({ message: `Product ID: ${idNumber} deleted` });
     } catch (error) {
         res.status(500).json({ error: "Internal Server Error - (ELIMINAR PRODUCTO.)" });

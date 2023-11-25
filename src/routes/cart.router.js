@@ -1,12 +1,12 @@
 import { Router } from "express";
 const router = Router();
-import { cartManager } from "../daos/fileSystem/carts.manager.js";
+import { cartDaoFS } from "../daos/fileSystem/carts.Dao.js";
 
 
 //MOSTRAR TODOS LOS CARRITOS.
 router.get("/", async (req, res) => {
     try {
-        const carts = await cartManager.getCarts();
+        const carts = await cartDaoFS.getCarts();
         res.status(200).json(carts);
     } catch (error) {
         res.status(404).json({ message: "The cart does not exist..." });
@@ -17,7 +17,7 @@ router.get("/", async (req, res) => {
 router.get('/:cid', async (req, res) => {
     try {
         const { cid } = req.params;
-        const cartById = await cartManager.getCartById(Number(cid));
+        const cartById = await cartDaoFS.getCartById(Number(cid));
         if (!cartById) {
             res.status(404).json({ message: "The cart does not exist..." });
         } else {
@@ -33,7 +33,7 @@ router.get('/:cid', async (req, res) => {
 router.post('/:idCart/product/:idProd', async (req, res) => {
     try {
         const { idCart, idProd } = req.params; // Obtenener los valores de los parametros
-        const cart = await cartManager.saveProductToCart(idCart, idProd); // Llama al metodo para guardar el producto en el carrito
+        const cart = await cartDaoFS.saveProductToCart(idCart, idProd); // Llama al metodo para guardar el producto en el carrito
 
         res.status(200).json(cart);
     } catch (error) {
@@ -47,7 +47,7 @@ router.post('/:idCart/product/:idProd', async (req, res) => {
 router.post("/", async (req, res) => {
     try {
         //crear el carrito
-        const cartCreated = await cartManager.createCart(req.body);
+        const cartCreated = await cartDaoFS.createCart(req.body);
         res.status(200).json(cartCreated);
     } catch (error) {
         res.status(500).json({ error: "Internal Server Error" });
@@ -60,11 +60,11 @@ router.put("/:pid", async (req, res) => {
         const cart = { ...req.body };
         const { id } = req.params;
         const idNumber = Number(id);
-        const cartOk = await cartManager.getCartById(idNumber);
+        const cartOk = await cartDaoFS.getCartById(idNumber);
         if (!cartOk) {
             res.status(404).json({ message: "The cart does not exist..." });
         } else {
-            await cartManager.updateCart(cart, idNumber);
+            await cartDaoFS.updateCart(cart, idNumber);
             res.status(200).json({ message: `cart ID: ${id} updated successfully!` });
         }
     } catch (error) {
