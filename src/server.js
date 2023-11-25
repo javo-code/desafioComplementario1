@@ -6,9 +6,9 @@ import cartRouter from "./routes/cart.router.js";
 import viewRouter from './routes/views.router.js';
 import { Server } from "socket.io";
 import fs from 'fs';
-import { productManager } from './daos/managers/products.dao.js';
+import { productManager } from './daos/fileSystem/products.dao.js';
 
-import MessagesManager from './daos/managers/chat.dao.js';
+import MessagesManager from './daos/fileSystem/chat.dao.js';
 const msgManager = new MessagesManager(__dirname+'/db/messages.json');
 
 import "./daos/mongoDB/connection.js";
@@ -46,7 +46,7 @@ fs.readFile('./products.json', 'utf-8', (err, data) => {
 });
 
 socketServer.on('connection', async (socket) => {
-  console.log('🍺 Cliente conectado');
+  console.log('✔ Cliente conectado');
 
   // Emitir productos al cliente al conectarse
   socket.emit('arrayProducts', products);
@@ -83,7 +83,7 @@ socketServer.on('connection', async (socket) => {
     }
   });
 
-    console.log('🟢 ¡New connection!', socket.id);
+    console.log('🟢 ¡New connection!', '✨' + socket.id + '✨');
     socketServer.emit('messages', await msgManager.getAll());
 
     socket.on('disconnect', ()=>console.log('🔴 ¡User disconnect!', socket.id));

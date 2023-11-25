@@ -1,7 +1,7 @@
 import fs from "fs";
-import { productManager } from "../managers/products.dao.js";
+import { productDaoFS } from "../fileSystem/products.dao.js";
 
-class CartManager {
+class CartDaoFS {
     constructor(path) {
         this.path = path;
     }
@@ -71,7 +71,7 @@ if (!currentCart.products) {
 }
 
 // Obtener la lista de productos
-const products = await productManager.getProducts();
+const products = await productDaoFS.getProducts();
 
 // Encontrar el producto a agregar por su ID
 const productToAdd = products.find((product) => product.id === Number(idProduct));
@@ -120,6 +120,6 @@ return currentCart;
     }
 }
 
-const cartManager = new CartManager("./carts.json");
+const cartDaoFS = new CartDaoFS("./carts.json");
 
-export { cartManager }
+export { cartDaoFS }

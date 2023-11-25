@@ -41,8 +41,8 @@ socket.on("messages", (data) => {
 
 socket.on('newUser', (username)=>{
     Toastify({
-        text: `${username} is logged in`,
-        duration: 3000,
+        text: `${username} entró al chat`,
+        duration: 2000,
         close: true,
         // destination: 'http.....'
         gravity: 'top',
@@ -58,6 +58,10 @@ message.addEventListener('keypress', ()=>{
     socket.emit('chat:typing', username)
 });
 
-socket.on('chat:typing', (data)=>{
-    actions.innerHTML = `<p>${data} is writing a message...</p>`
+message.addEventListener('', ()=>{
+    socket.emit('chat:typing', username)
+});
+
+socket.on('chat:typing', (user)=>{
+    actions.innerHTML = `<p>${user} escribiendo...</p>`
 });

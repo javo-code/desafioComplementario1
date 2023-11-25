@@ -1,6 +1,6 @@
 import fs from 'fs';
 
-export default class MessageManager{
+export default class MessageDaoFS{
     constructor(path){
         this.path = path;
     }

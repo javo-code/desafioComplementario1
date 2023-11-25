@@ -1,6 +1,6 @@
 import fs from "fs";
 
-class ProductManager {
+class ProductDaoFS {
   constructor(path) {
     this.path = path;
   }
@@ -93,6 +93,6 @@ class ProductManager {
   }
 }
 
-const productManager = new ProductManager("./products.json")
+const productDaoFS = new ProductDaoFS("./products.json")
 
-export { productManager }
+export { productDaoFS }
