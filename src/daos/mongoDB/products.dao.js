@@ -1,95 +1,50 @@
-/*
-import { model } from 'mongoose';
-import { ProductModel  } from './models/products.model';
-*/
-
-import fs from 'fs';
+import { ProductModel } from "./models/products.model.js";
 
 export default class ProductDaoMongoDB {
-    constructor(path) {
-        this.path = path;
-}
-
-async #getMaxId() {
-    let maxId = 0;
-    const products = await this.getAll();
-    products.map((prod) => {
-        if (prod.id > maxId) maxId = prod.id;
-        });
-        return maxId;
-    }
-
     async getAll() {
         try {
-            if (fs.existsSync(this.path)) {
-                const products = await fs.promises.readFile(this.path, "utf-8");
-                const productsJSON = JSON.parse(products);
-                return productsJSON;
-            } else {
-                return []
-            }
+        const response = await ProductModel.find({});
+        return response;
         } catch (error) {
-            console.log("error del get all en products dao mongo")
+        console.log(error);
         }
     }
-    
-    //CREAR PRODUCTO.
-    async create(obj) {
-        try {
-            const product = {
-                id: (await this.#getMaxId()) + 1,
-                ...obj,
-            };
-            const productsFile = await this.getAll();
-            productsFile.push(product);
-            await fs.promises.writeFile(this.path, JSON.stringify(productsFile));
-            return product
-        } catch (error) {
-            console.log("error del create de mongo");
-        }
-    }
-    
+
     async getById(id) {
         try {
-            const products = await this.getAll();
-            const product = products.find((prod) => prod.id === id);
-            if (product) {
-                return product;
-            }
-            return true;
+        const response = await ProductModel.findById(id);
+        return response;
         } catch (error) {
-            console.log("error del get by id de mongo");
+        console.log(error);
         }
     }
 
-    async update(obj, id) {
+    async create(obj) {
         try {
-            const productsFile = await this.getAll();
-            const index = productsFile.findIndex((prod) => prod.id === id);
-            if (index === -1) {
-                throw new Error(`Id ${id} not found`);
-            } else {
-                productsFile[index] = { ...obj, id };
-            }
-            await fs.promises.writeFile(this.path, JSON.stringify(productsFile));
+        const response = await ProductModel.create(obj);
+        return response;
         } catch (error) {
-            console.log("error del update de mongo");
+        console.log(error);
         }
     }
 
-    async delete(id){
+    async update(id, obj) {
         try {
-            const productsFile = await this.getAll();
-            if (productsFile.length > 0) {
-                const newArray = productsFile.filter((prod) => prod.id !== id);
-                await fs.promises.writeFile(this.path, JSON.stringify(newArray));
-/*                 return true; */
-            } else {
-                throw new Error(`Product id: ${id} not found`);
-            }
+        const response = await ProductModel.findByIdAndUpdate(id, obj, {
+            new: true,
+        });
+        return response;
         } catch (error) {
-            console.log("error del delete de mongo");
+        console.log(error);
         }
     }
 
+    async delete(id) {
+        try {
+        const response = await ProductModel.findByIdAndDelete(id);
+        return response;
+        } catch (error) {
+        console.log(error);
+        }
+    }
 }

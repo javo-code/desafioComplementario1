@@ -18,7 +18,7 @@ export const getAll = async () => {
 export const getById = async (id) => {
   try {
     const prod = await prodDao.getById(id);
-    if (!prod) return false; //el controller recibe esta respuesta
+    if (!prod) return false;
     else return prod;
   } catch (error) {
     console.log(error);
