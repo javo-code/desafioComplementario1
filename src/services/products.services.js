@@ -1,12 +1,6 @@
 import ProductDaoMongoDB from "../dao/mongoDB/products.dao.js";
 const prodDao = new ProductDaoMongoDB(); 
 
-/* import ProductDaoFS from "../dao/fileSystem/products.dao.js";
-import { __dirname } from "../utils.js";
-const prodDao = new ProductDaoFS(
-  __dirname + '/data/products.json'
-) */
-
 export const getAll = async () => {
   try {
     return await prodDao.getAll();
@@ -54,3 +48,14 @@ export const remove = async (id) => {
     console.log(error);
   }
 };
+
+export const getProductsByLimit = async (limit) => {
+    try {
+        const products = await prodDao.getProductsByLimit(limit);
+        return products;
+    } catch (error) {
+        console.log(error);
+        throw new Error('Error retrieving products by limit');
+  }
+};
+  
