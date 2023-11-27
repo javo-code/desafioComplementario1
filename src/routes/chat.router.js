@@ -1,22 +1,22 @@
 import { Router } from "express";
 const router = Router();
 
-import { createMsg, deleteMsg, getAllMsgs, getMsgById, updateMsg } from "../controllers/chat.controller.js";
+import { createMessage, deleteMessage, getAllMessages, getMessageById, updateMessage } from "../controllers/chat.controller.js";
 
 
 //MOSTRAR TODOS LOS MENSAJESS
-router.get("/", getAllMsgs);
+router.get("/", getAllMessages);
 
 //CREAR MENSAJES.
-router.post("/", productValidator, createMsg);
+router.post("/", createMessage);
 
 //MOSTRAR MENSAJES POR ID.
-router.get("/:id", getMsgById);
+router.get("/:id", getMessageById);
 
 //MODIFICAR MENSAJES.
-router.put("/:id", updateMsg);
+router.put("/:id", updateMessage);
 
 //ELIMINAR MENSAJES.
-router.delete("/:id", deleteMsg);
+router.delete("/:id", deleteMessage);
 
 export default router;

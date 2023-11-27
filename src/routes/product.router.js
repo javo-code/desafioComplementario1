@@ -21,7 +21,4 @@ router.put("/:id", updateProduct);
 //ELIMINAR PRODUCTO.
 router.delete("/:id", deleteProduct);
 
-//CREAR PRODUCTO y AGREGAR IMG.
-//seguir probando...
-
 export default router;

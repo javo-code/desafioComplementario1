@@ -1,9 +1,9 @@
-import { MessageModel } from "./models/chat.model.js";
+import { CartModel } from "./models/carts.model.js";
 
-export default class MessageDaoMongoDB {
+export default class CartsDaoMongoDB {
     async getAll() {
         try {
-        const response = await MessageModel.find({});
+        const response = await CartModel.find({});
         return response;
         } catch (error) {
         console.log(error);
@@ -12,7 +12,7 @@ export default class MessageDaoMongoDB {
 
     async getById(id) {
         try {
-            const response = await MessageModel.findById(id);
+            const response = await CartModel.findById(id);
             return response;
         } catch (error) {
             console.log(error);
@@ -21,7 +21,7 @@ export default class MessageDaoMongoDB {
 
     async create(obj) {
         try {
-            const response = await MessageModel.create(obj);
+            const response = await CartModel.create(obj);
             return response;
         } catch (error) {
             console.log(error);
@@ -30,7 +30,7 @@ export default class MessageDaoMongoDB {
 
     async update(id, obj) {
         try {
-            return await MessageModel.findByIdAndUpdate({ _id: id }, obj, {
+            return await CartModel.findByIdAndUpdate({ _id: id }, obj, {
             new: true,
             });
         } catch (error) {
@@ -40,7 +40,7 @@ export default class MessageDaoMongoDB {
 
     async delete(id) {
         try {
-            return await MessageModel.findByIdAndDelete(id);
+            return await CartModel.findByIdAndDelete(id);
         } catch (error) {
             console.log(error);
         }
