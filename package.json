@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
   "name": "desafiocomplementario1",
   "version": "1.0.0",
   "description": "",
@@ -7,6 +8,16 @@
   "scripts": {
     "start": "node .",
     "dev": "nodemon ."
+=======
+  "name": "desafio4",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "node --watch src/server.js",
+    "start": "node src/server.js"
+>>>>>>> 470e2add0a3e4130ed0a1d38841a4880afd09b3d
   },
   "keywords": [],
   "author": "",
@@ -16,7 +27,12 @@
     "express-handlebars": "^7.1.2",
     "mongoose": "^8.0.1",
     "morgan": "^1.10.0",
+<<<<<<< HEAD
     "socket.io": "^4.7.2"
+=======
+    "socket.io": "^4.7.2",
+    "sweetalert2": "^11.10.1"
+>>>>>>> 470e2add0a3e4130ed0a1d38841a4880afd09b3d
   },
   "devDependencies": {
     "nodemon": "^3.0.1"

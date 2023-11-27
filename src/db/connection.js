@@ -1,13 +1,12 @@
-import { connect } from "mongoose";
+import mongoose from 'mongoose';
 
-const MONGO_URL = "mongodb://127.0.0.1:27017/NUEVAMEDICINA";
-const MONGO_ATLAS_URL = 'mongodb+srv://admin:admin@cluster0.xibok.mongodb.net/coder47345?retryWrites=true&w=majority'
+const MONGO_URL = 'mongodb://127.0.0.1:27017/ecommerce';
 
-// export const initMongoDB = async () => {
+const MONGO_ATLAS_URL = 'mongodb+srv://romerofj26:admin@datavaultcluster.bxnyw28.mongodb.net/ecommerce?retryWrites=true&w=majority';
+
   try {
-    await connect(MONGO_ATLAS_URL);
-    console.log("Conectado a la base de datos de MONGODB");
+    await mongoose.connect(MONGO_URL);
+    console.log('Conectado a la base de datos de MongoDB');
   } catch (error) {
-    console.log(error);
+    console.log(`ERROR => ${error}`);
   }
-// };
