@@ -39,7 +39,8 @@ const httpServer = app.listen(PORT, () => {
 });
 
 const socketServer = new Server(httpServer);
-let products = []; // Array de productofs.readFile('src/data/products.json', 'utf-8', (err, data) => {
+let products = []; // Array de productos
+fs.readFile('src/data/products.json', 'utf-8', (err, data) => {
   if (!err) {
     products = JSON.parse(data);
   } else {
@@ -50,20 +51,23 @@ let products = []; // Array de productofs.readFile('src/data/products.json', 'ut
 socketServer.on('connection', async (socket) => {
   console.log('✔ Cliente conectado');
 
+  
   socket.emit('arrayProducts', products);
 
   socket.on('newProduct', (product) => {
+    
+    products.push(product);
 
-    products.push(product)
     socketServer.emit('arrayProducts', products);
 
-
+    
     fs.writeFile('src/data/products.json', JSON.stringify(products, null, 2), (err) => {
       if (err) {
         console.error('Error al guardar los productos:', err);
       } else {
         console.log('Productos guardados exitosamente en "products.json"');
-    
+
+        
         socketServer.emit('newProductAdded', product);
       }
     });
@@ -73,12 +77,14 @@ socketServer.on('connection', async (socket) => {
     try {
       await productDaoFS.deleteProduct(parseInt(productId));
       const updatedProducts = await productDaoFS.getProducts();
-  
+
+      
       socketServer.emit('arrayProducts', updatedProducts);
     } catch (error) {
       console.error('Error al eliminar el producto:', error);
     }
   });
+
     console.log('🟢 ¡New connection!', '✨' + socket.id + '✨');
     socketServer.emit('messages', await msgDaoFS.getAll());
 

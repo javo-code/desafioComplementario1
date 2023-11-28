@@ -21,4 +21,8 @@ router.put("/:id", updateProduct);
 //ELIMINAR PRODUCTO.
 router.delete("/:id", deleteProduct);
 
+//MOSTRAR PRODUCTOS CON UN LIMITE.
+router.delete("/:id", deleteProduct);
+
+
 export default router;
