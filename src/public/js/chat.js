@@ -37,7 +37,7 @@ socket.on('messages', (data) => {
     actions.innerHTML = '';
     const chatRender = data
         .map((msg) => {
-            return `<p><strong>${msg.username}</strong>: ${msg.message}</p>`;
+            return `<p><strong>${msg.userName}</strong>: ${msg.message}</p>`;
         })
         .join(' ');
     output.innerHTML = chatRender;
