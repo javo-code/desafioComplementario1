@@ -26,7 +26,7 @@ btn.addEventListener('click', () => {
     const newMessage = message.value.trim();
     if (newMessage) {
         socket.emit('chat:message', {
-            username,
+            userName: username,
             message: newMessage,
         });
         message.value = '';

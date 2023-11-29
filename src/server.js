@@ -106,7 +106,6 @@ socketServer.on('connection', async (socket) => {
   
   socket.on('chat:message', async (message) => {
     try {
-        message.userName = message.userName || 'Nombre predeterminado';
         await MessageModel.create(message);
     } catch (error) {
         console.error('Error al guardar el mensaje:', error);
